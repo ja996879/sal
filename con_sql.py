@@ -51,8 +51,8 @@ class Sql3:
       
    def t_s(self):
       print("success")
-   def f_t_login(self,s_str):
-      f_one = self.conn.execute(s_str)
+   def f_t_login(self,s_str,*args):
+      f_one = self.conn.execute(s_str,(args[0],args[1]))
       f_res = f_one.fetchone()
       if (f_res==None):
         return False

@@ -8,12 +8,14 @@ from tkinter import *
 from con_sql import Sql3
 #from export_excel import EXport_excel
 from tkinter import Tk, StringVar, ttk
+from datetime import datetime, timedelta
 
 class appMain(Frame):
     
     def __init__(self,master=None):
         Frame.__init__(self,master)
         master.minsize(width=250, height=320)
+        self.t_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.grid()
         ##################
         
@@ -22,11 +24,13 @@ class appMain(Frame):
         menubar.add_cascade(label="功能", menu=filemenu)
         filemenu.add_separator()
         filemenu.add_command(label="登入",command=self.chi_window)
+        filemenu.add_command(label="登出",command=self.login_off)
         filemenu.add_command(label="EXIT",command=root.destroy)
         master.config(menu=menubar)
         ##################
         self.createWindow()
     def createWindow(self):
+        print(self.t_time)
         self.tt = Label(text=" ")
         self.tt.grid(row=0,column=0)
        
@@ -48,6 +52,7 @@ class appMain(Frame):
 
         self.on_button = Button(self.frame1, text="ON", width=8,font=("Courier", 10))
         self.on_button.grid(row=1,column=1 )
+        self.on_button['command']=self.check_in
 
         self.upframe = LabelFrame(self.frame1,text="Pane A")
         self.upframe.grid(row=4,column=0 , sticky=W,padx=10, columnspan=2)
@@ -62,6 +67,7 @@ class appMain(Frame):
 
         self.off_button = Button(self.frame2, text="DOWN", width=8,font=("Courier", 10))
         self.off_button.grid(row=1,column=1 )
+        self.off_button['command']=self.check_out
 
         self.onframe = LabelFrame(self.frame2,text="Pane B")
         self.onframe.grid(row=4,column=0 , sticky=W,padx=10,columnspan=2)
@@ -75,8 +81,6 @@ class appMain(Frame):
         c_win.wm_title("admin")
         c_win.minsize(width=400, height=250)
       
-        self.notebook.tab(self.frame3, state='normal')
-        
         c_win.chipnlab = Label(c_win,text=" account : ")
         c_win.chipnlab.grid(row=0,column=0,sticky=W)
         
@@ -98,13 +102,18 @@ class appMain(Frame):
         
     def login_on(self,cw):
         cbx = Sql3()
-        coi = cbx.f_t_login("select Uname,Upass from Suser where Uname='%s' and Upass='%s'" %(cw.ac_name.get(),cw.ac_pass.get()))
+        coi = cbx.f_t_login("select Uname,Upass from Suser where Uname=? and Upass=?" ,cw.ac_name.get(),cw.ac_pass.get())
         if(coi):
-            print("true")
+            self.notebook.tab(self.frame3, state='normal')
         else:
             print("false")
         cbx.del_con
     def login_off(self):
+        self.notebook.tab(self.frame3, state='disabled')
+
+    def check_in(self):
+        pass
+    def check_out(self):
         pass
 if __name__ == '__main__':
    root = Tk() 
