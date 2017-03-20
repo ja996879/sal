@@ -18,9 +18,10 @@ class Sql3:
 
       
    def i_sql(self, i_str , *args):
-      if len(args)==3:
+      if len(args)==2:
        try: 
-        u_coursor = self.conn.execute(i_str ,(args[0],args[1],args[2]))
+        u_coursor = self.conn.execute(i_str ,(args[0],args[1]))
+        
         self.conn.commit()
         return True
        except sqlite3.Error:

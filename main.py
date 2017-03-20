@@ -15,7 +15,7 @@ class appMain(Frame):
     def __init__(self,master=None):
         Frame.__init__(self,master)
         master.minsize(width=250, height=320)
-        self.t_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.t_time=datetime.now().strftime("%Y-%m-%d 09:00:00")
         self.grid()
         ##################
         
@@ -107,14 +107,20 @@ class appMain(Frame):
             self.notebook.tab(self.frame3, state='normal')
         else:
             print("false")
-        cbx.del_con
+        cbx.del_con()
     def login_off(self):
         self.notebook.tab(self.frame3, state='disabled')
 
     def check_in(self):
-        pass
+        g_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cbx=Sql3()
+        coi = cbx.i_sql("insert into w_time(user_id,g_time,t_time,company_id) values(1,?,?,1)",g_time,self.t_time)
+        cbx.del_con()
     def check_out(self):
-        pass
+        off_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cbx=Sql3()
+        coi = cbx.i_sql("insert into w_time(user_id,off_time,t_time,company_id) values(1,?,?,1)",off_time,self.t_time)
+        cbx.del_con()
 if __name__ == '__main__':
    root = Tk() 
    root.wm_title("RPy")
