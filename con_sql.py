@@ -18,10 +18,9 @@ class Sql3:
 
       
    def i_sql(self, i_str , *args):
-      if len(args)==2:
-       try: 
-        u_coursor = self.conn.execute(i_str ,(args[0],args[1]))
-        
+      if len(args)!=5:
+       try:
+        u_coursor = self.conn.execute(i_str ,(args[0],args[1],args[2]))
         self.conn.commit()
         return True
        except sqlite3.Error:
@@ -29,13 +28,11 @@ class Sql3:
        
        
    def u_sql(self,u_str , *args):
-      print(u_str)
-      try: 
+     
         u_coursor = self.conn.execute(u_str ,(args[0],args[1],args[2],args[3]))
         
         self.conn.commit()
-      except sqlite3.Error:
-        print("update error")
+      
 
    def d_sql(self,d_str, *args):
       try:

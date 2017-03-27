@@ -15,7 +15,9 @@ class appMain(Frame):
     def __init__(self,master=None):
         Frame.__init__(self,master)
         master.minsize(width=250, height=320)
-        self.t_time=datetime.now().strftime("%Y-%m-%d 09:00:00")
+        self.t_time = datetime.now().strftime("%Y-%m-%d 09:00:00")
+        self.today_start_time = datetime.now().strftime("%Y-%m-%d 00:00:00")
+        self.today_end_time = datetime.now().strftime("%Y-%m-%d 23:00:00")
         self.grid()
         ##################
         
@@ -114,13 +116,33 @@ class appMain(Frame):
     def check_in(self):
         g_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cbx=Sql3()
-        coi = cbx.i_sql("insert into w_time(user_id,g_time,t_time,company_id) values(1,?,?,1)",g_time,self.t_time)
+        print(self.onbinput.get())
+        boi = cbx.s_sql("select * from users where name='%s'" %(self.onbinput.get()) )
+
+        data_tal = boi.fetchone()
+        if data_tal is None:
+            print("no one")
+        else:
+            print("has one")
+            data_id = data_tal[0]
+            coi = cbx.i_sql("insert into det_time(user_id,w_time,off_time,group_id) values(?,?,?,1)",data_id,g_time,self.t_time)
+          
         cbx.del_con()
     def check_out(self):
         off_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cbx=Sql3()
-        coi = cbx.i_sql("insert into w_time(user_id,off_time,t_time,company_id) values(1,?,?,1)",off_time,self.t_time)
+        boi = cbx.s_sql("select * from users where name='%s'" %(self.offbinput.get()) )
+        data_tal = boi.fetchone()
+        if data_tal is None:
+            print("no one")
+        else:
+            data_id = data_tal[0]
+            print(data_id)
+        coi = cbx.u_sql("update det_time set off_time= ?  where (w_time between ? and ?) and user_id=?" , off_time ,self.today_start_time,self.today_end_time,data_id)     
+        print("update det_time set off_time=%s where (w_time between %s and %s) and user_id=%s" %( off_time ,self.today_start_time,self.today_end_time,data_id))
         cbx.del_con()
+    def export_result(self):
+        pass
 if __name__ == '__main__':
    root = Tk() 
    root.wm_title("RPy")
