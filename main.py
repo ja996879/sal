@@ -125,7 +125,7 @@ class appMain(Frame):
         else:
             print("has one")
             data_id = data_tal[0]
-            coi = cbx.i_sql("insert into det_time(user_id,w_time,off_time,group_id) values(?,?,?,1)",data_id,g_time,self.t_time)
+            coi = cbx.i_sql("insert into det_time(user_id,w_time,off_time,group_id) values(?,?,?,1)",data_id,g_time,None)
           
         cbx.del_con()
     def check_out(self):

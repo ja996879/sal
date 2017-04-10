@@ -3,6 +3,7 @@ import os
 import xlsxwriter
 from datetime import datetime
 from con_sql import Sql3
+from date import FDate
 class EXport_excel:
     
    def __init__(self):
@@ -18,11 +19,21 @@ class EXport_excel:
 
 
           worksheet.set_column('A:D', 10)
-   
-xa=Sql3()
-xa_all=xa.s_sql("select ")
-       
-      
+          xa = Sql3()
+          xa_all=xa.s_sql("select * from det_time as d inner join users as u on   u.id=user_id")
+          xf = FDate()
+          
+          for row in xa_all:
+             if (row[2]!=None and row[3]!=None):
+               print(row[2])
+               print(row[3])
+               print(round(xf.date_less(row[2],row[3])/60))
+             else:
+               print("nocheck")
+#xa=Sql3()
+#xa_all=xa.s_sql("select ")
+xb=EXport_excel()      
+xb.w_excel()     
 
 '''
 from datetime import datetime
@@ -42,4 +53,9 @@ if os.path.exists("C:\\PRy.ico"):
     print("True")
 else:
     print("False")
+計算每月最大天數
+import calendar
+monthRange = calendar.monthrange(2017,3)
+print(monthRange)
+
 '''

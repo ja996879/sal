@@ -20,7 +20,8 @@ class FDate:
         a_a_date = self.date_analyst(a_date)
         d_less = (a_a_date-t_a_date).seconds
         #total seconds
-        
+        #print(round(d_less/60))
+        #ceil < up   down < floor 4-5++ < round
         return d_less
     
     def date_now(self,now_date):
@@ -31,5 +32,5 @@ class FDate:
         elif(now_date=='3'):
             return datetime.now().strftime('%Y-%m-%d')
 
-x=FDate()
-x.date_less('2014-10-25 09:00:00','2014-10-25 10:05:00')
+#x=FDate()
+#x.date_less('2014-10-25 09:00:00','2014-10-25 10:05:00')
