@@ -11,29 +11,70 @@ class EXport_excel:
        self.us = os.getlogin()
           
    def w_excel(self):       
-       #pattern = re.compile(r"%s" %(self.today_dt))
-       #if os.path.exists("C:\\Users\\%s\\Desktop\\%s.xlsx"):
+       
           workbook = xlsxwriter.Workbook("C:\\Users\\%s\\Desktop\\%sprduct.xlsx" % (self.us,self.today_dt))
           
           worksheet = workbook.add_worksheet()
 
 
-          worksheet.set_column('A:D', 10)
+          worksheet.set_column('A:D', 15)
           xa = Sql3()
-          xa_all=xa.s_sql("select * from det_time as d inner join users as u on   u.id=user_id")
+          xa_all = xa.s_sql("select * from det_time as d inner join users as u on u.id=user_id order by  user_id")
           xf = FDate()
+
           
+          row_u_name = 0
+          row_time = 1
+         
           for row in xa_all:
              if (row[2]!=None and row[3]!=None):
-               print(row[2])
-               print(row[3])
-               print(round(xf.date_less(row[2],row[3])/60))
+               worksheet.write(row_u_name,0,row[7])
+               worksheet.write(row_u_name,row_time,row[1])
+               worksheet.write(row_u_name,row_time+1,row[2])
+               worksheet.write(row_u_name,row_time+2,row[3])
+               worksheet.write(row_u_name,row_time+3,round(xf.date_less(row[2],row[3])/60))
+               row_u_name += 1
+               #print(round(xf.date_less(row[2],row[3])/60))
              else:
                print("nocheck")
-#xa=Sql3()
-#xa_all=xa.s_sql("select ")
+          #xu_all = xa.s_sql("select * from det_time")
+          workbook.close()
+          xa.del_con()
+   def total_excel(self):
+      
+      user_list=[]
+      t_list=[]
+      user_name=[]
+      det_user={}
+      
+      xf = FDate()
+      xa = Sql3()
+      xu_all = xa.s_sql("select * from users")
+      
+      num_user = 0
+      for row_u in xu_all:
+         user_list.append(row_u[0])
+         user_name.append(row_u[1])
+         
+      for row_sql in user_list:
+         t_time_all = 0
+         xut_all=xa.s_sql("select * from det_time where (w_time between '2017-04-01' and '2017-04-30') and user_id=%s" %(row_sql))
+         
+         for t_total in xut_all:
+            if (t_total[2]!=None and t_total[3]!=None):
+               t_time_all += round(xf.date_less(t_total[2],t_total[3])/60)
+         t_list.append(t_time_all)
+         det_user[user_name[num_user]] = t_time_all
+         num_user += 1
+      print(t_list)
+      print(det_user)
+
+      
+   def per_excel(self):
+      pass
+
 xb=EXport_excel()      
-xb.w_excel()     
+xb.total_excel()     
 
 '''
 from datetime import datetime

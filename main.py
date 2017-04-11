@@ -42,7 +42,8 @@ class appMain(Frame):
         self.frame3 = ttk.Frame(self.notebook)
         self.notebook.add(self.frame1, text='UP Data')
         self.notebook.add(self.frame2, text='OFF Data')
-        self.notebook.add(self.frame3, text='User Data',state="disabled")
+        self.notebook.add(self.frame3, text='User Data')
+        #self.notebook.add(self.frame3, text='User Data',state="disabled")
         self.notebook.grid(row=1,column=1)
 
         ##################### frame1 ############################
@@ -77,6 +78,26 @@ class appMain(Frame):
         self.message2_label = Label(self.onframe, text="off Message!!",width=40,height=6)
         self.message2_label.grid(row=3,column=0 , sticky=W)
         ##################### frame3 ############################
+        
+        self.information_label = Label(self.frame3, text="ALL TIME")
+        self.information_label.grid(row=1,column=0 , sticky=W ,pady=25,padx=40)
+
+        self.down_all_button = Button(self.frame3, text="下載", width=8,font=("Courier", 10))
+        self.down_all_button.grid(row=1,column=1 )
+
+        self.information_label2 = Label(self.frame3, text="SOMETIME")
+        self.information_label2.grid(row=2,column=0 , sticky=W ,pady=25,padx=40)
+
+        self.down_sm_button = Button(self.frame3, text="下載", width=8,font=("Courier", 10))
+        self.down_sm_button.grid(row=2,column=1 )
+
+        self.information_label3 = Label(self.frame3, text="PERSON")
+        self.information_label3.grid(row=3,column=0 , sticky=W ,pady=25,padx=40)
+
+        
+        self.down_pe_button = Button(self.frame3, text="下載", width=8,font=("Courier", 10))
+        self.down_pe_button.grid(row=3,column=1 )
+
         
     def chi_window(self):
         c_win = tk.Toplevel()
@@ -139,7 +160,7 @@ class appMain(Frame):
             data_id = data_tal[0]
             print(data_id)
         coi = cbx.u_sql("update det_time set off_time= ?  where (w_time between ? and ?) and user_id=?" , off_time ,self.today_start_time,self.today_end_time,data_id)     
-        print("update det_time set off_time=%s where (w_time between %s and %s) and user_id=%s" %( off_time ,self.today_start_time,self.today_end_time,data_id))
+        #print("update det_time set off_time=%s where (w_time between %s and %s) and user_id=%s" %( off_time ,self.today_start_time,self.today_end_time,data_id))
         cbx.del_con()
     def export_result(self):
         pass
