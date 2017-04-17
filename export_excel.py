@@ -14,12 +14,12 @@ class EXport_excel:
        
           workbook = xlsxwriter.Workbook("C:\\Users\\%s\\Desktop\\%sprduct.xlsx" % (self.us,self.today_dt))
           
-          worksheet = workbook.add_worksheet()
+          worksheet = workbook.add_worksheet('pg1')
 
 
           worksheet.set_column('A:D', 15)
           xa = Sql3()
-          xa_all = xa.s_sql("select * from det_time as d inner join users as u on u.id=user_id order by  user_id")
+          xa_all = xa.s_sql("select * from det_time as d inner join users as u on u.id=user_id  where (w_time between '2017-04-01' and '2017-04-30') order by  user_id")
           xf = FDate()
 
           
@@ -40,6 +40,7 @@ class EXport_excel:
           #xu_all = xa.s_sql("select * from det_time")
           workbook.close()
           xa.del_con()
+          
    def total_excel(self):
       
       user_list=[]
@@ -66,15 +67,41 @@ class EXport_excel:
          t_list.append(t_time_all)
          det_user[user_name[num_user]] = t_time_all
          num_user += 1
-      print(t_list)
-      print(det_user)
-
+      xa.del_con()
       
    def per_excel(self):
-      pass
-
-xb=EXport_excel()      
-xb.total_excel()     
+      xa = Sql3()
+      xf = FDate()
+      row_x_start=0
+      row_y_start=0
+      workbook = xlsxwriter.Workbook("C:\\Users\\%s\\Desktop\\%sprduct.xlsx" % (self.us,'b4597'))
+      worksheet = workbook.add_worksheet('b4597')
+      worksheet.set_column('A:D', 15)
+      xu_num = xa.s_sql("select id from users where name = 'b4597'")
+      for xu_n in xu_num:
+         xu_number=xu_n[0]
+      xu_per_information = xa.s_sql("select w_time,off_time from det_time where user_id = %s and (w_time between '2017-04-01' and '2017-04-30')" %(xu_number))
+      for xu_det in xu_per_information: 
+         print(round(xf.date_less(xu_det[0],xu_det[1])/60))
+         worksheet.write(row_x_start,row_y_start,xu_det[0])
+         worksheet.write(row_x_start,row_y_start+1,xu_det[1])
+         worksheet.write(row_x_start,row_y_start+2,round(xf.date_less(xu_det[0],xu_det[1])/60))
+         row_x_start += 1
+      workbook.close()
+      xa.del_con()
+      
+   def some_excel(self):
+      xa = Sql3()
+      u_dict = {}
+      xu_all = xa.s_sql("select * from users")
+      for xu_dict in xu_all:
+         u_dict[xu_dict[1]] = xu_dict[0]
+      for k,v in u_dict.items():
+         print("Key : %s, Value : %s" %(k, v))
+         #xu_total_information = xa.s_sql("")
+   
+xb=EXport_excel() 
+xb.some_excel()     
 
 '''
 from datetime import datetime

@@ -163,7 +163,11 @@ class appMain(Frame):
         #print("update det_time set off_time=%s where (w_time between %s and %s) and user_id=%s" %( off_time ,self.today_start_time,self.today_end_time,data_id))
         cbx.del_con()
     def export_result(self):
-        pass
+        pass  #w_excel  alltime
+    def export_person(self):
+        pass  #per_excel person
+    
+    
 if __name__ == '__main__':
    root = Tk() 
    root.wm_title("RPy")
