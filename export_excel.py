@@ -82,7 +82,6 @@ class EXport_excel:
          xu_number=xu_n[0]
       xu_per_information = xa.s_sql("select w_time,off_time from det_time where user_id = %s and (w_time between '2017-04-01' and '2017-04-30')" %(xu_number))
       for xu_det in xu_per_information: 
-         print(round(xf.date_less(xu_det[0],xu_det[1])/60))
          worksheet.write(row_x_start,row_y_start,xu_det[0])
          worksheet.write(row_x_start,row_y_start+1,xu_det[1])
          worksheet.write(row_x_start,row_y_start+2,round(xf.date_less(xu_det[0],xu_det[1])/60))
@@ -92,13 +91,28 @@ class EXport_excel:
       
    def some_excel(self):
       xa = Sql3()
+      xf = FDate()
       u_dict = {}
+      total_dict={}
+      some_rowx_start = 0
+      some_rowy_start = 0
+      workbook = xlsxwriter.Workbook("C:\\Users\\%s\\Desktop\\%sprduct.xlsx" % (self.us,"alltime"))
+      worksheet = workbook.add_worksheet('all')
       xu_all = xa.s_sql("select * from users")
       for xu_dict in xu_all:
          u_dict[xu_dict[1]] = xu_dict[0]
       for k,v in u_dict.items():
-         print("Key : %s, Value : %s" %(k, v))
-         #xu_total_information = xa.s_sql("")
+         total_time = 0
+         xu_total_information = xa.s_sql("select w_time,off_time from det_time where user_id = %s and (w_time between '2017-04-01' and '2017-04-30')" %(v))
+         for xu_t_i in xu_total_information :
+            total_time += round(xf.date_less(xu_t_i[0],xu_t_i[1])/60)
+         total_dict[k] = total_time
+      for k,v in total_dict.items(): 
+         worksheet.write(some_rowx_start,some_rowy_start,k)
+         worksheet.write(some_rowx_start,some_rowy_start+1,v)
+         some_rowx_start += 1
+      workbook.close()
+      xa.del_con()
    
 xb=EXport_excel() 
 xb.some_excel()     
@@ -126,4 +140,6 @@ import calendar
 monthRange = calendar.monthrange(2017,3)
 print(monthRange)
 
+
+print("Key : %s, Value : %s" %(k, v))
 '''
